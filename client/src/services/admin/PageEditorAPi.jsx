@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_ADMINAPI_URL;
+const API_URL = import.meta.env.VITE_SERVERAPI_URL;
 
 export const getHomepage = async () => {
   const response = await axios.get(`${API_URL}/homepage`);

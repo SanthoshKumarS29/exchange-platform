@@ -13,7 +13,7 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const API_URL = import.meta.env.VITE_ADMINAPI_URL;
+  const API_URL = import.meta.env.VITE_SERVERAPI_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -1,5 +1,5 @@
 import express from "express";
-import { getHomePage, updateHomePage } from "../controllers/cmsController.js";
+import { getHomePage, updateHomePage } from "../controller/cmsController.js";
 import { adminAuth } from "../middleware/adminAuth.js";
 
 const router = express.Router();

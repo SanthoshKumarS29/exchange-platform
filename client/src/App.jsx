@@ -4,6 +4,7 @@ import PageEditor from "./admin/PageEditor"
 import AdminDashboard from "./admin/AdminDashboard"
 import AdminLogin from "./admin/AdminLogin"
 import AdminProtectedRoute from "./admin/protectedRoute/AdminProtectedRoute"
+import Register from "./auth/Register"
 
 
 function App() {
@@ -27,6 +28,9 @@ function App() {
               </AdminLayout>
             </AdminProtectedRoute>
           } />
+
+          <Route path="*" element={<div>404 Not Found</div>} />
+          <Route path="/register" element={<Register />} />
         </Routes>
     </>
   )
