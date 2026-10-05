@@ -26,12 +26,16 @@ export const registerUser = async (req, res) => {
 
         // hash password
         const hashedPassword = await bcrypt.hash(password, 10);
+        const emailVerificationToken = crypto.randomBytes(32).toString('hex');
 
         // create new user
         const user = await User.create({
             name,
             email: email.toLowerCase(),
             password: hashedPassword,
+            emailVerificationToken: emailVerificationToken,
+            emailVerificationExpires: Date.now() + 3600000, // 1 hour
+
         });
         res.status(201).json({ success: true, message: 'User registered successfully', user });
     } catch (error) {
