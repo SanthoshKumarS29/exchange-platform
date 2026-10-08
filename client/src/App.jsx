@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom"
 import AdminLayout from "./admin/AdminLayout"
 import PageEditor from "./admin/PageEditor"
 import AdminDashboard from "./admin/AdminDashboard"
+import UserManagement from "./admin/UserManagement"
 import AdminLogin from "./admin/AdminLogin"
 import AdminProtectedRoute from "./admin/protectedRoute/AdminProtectedRoute"
 import Register from "./auth/Register"
@@ -25,6 +26,13 @@ function App() {
             <AdminProtectedRoute>
               <AdminLayout>
                 <PageEditor />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          } />
+          <Route path="/admin/users" element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <UserManagement />
               </AdminLayout>
             </AdminProtectedRoute>
           } />

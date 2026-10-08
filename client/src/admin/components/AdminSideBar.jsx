@@ -10,6 +10,7 @@ const AdminSidebar = () => {
         <Link to="/admin" className="block px-4 py-3 rounded-lg hover:bg-gray-800">Dashboard</Link>
 
         <Link to="/admin/homepage" className="block px-4 py-3 rounded-lg hover:bg-gray-800">Homepage</Link>
+        <Link to="/admin/users" className="block px-4 py-3 rounded-lg hover:bg-gray-800">Users</Link>
       </nav>
     </aside>
   );
