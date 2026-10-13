@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
@@ -24,11 +25,15 @@ const VerifyEmail = () => {
             setLoading(true);
             console.log('hello wrols')
 
-            // const API_URL = import.meta.env.VITE_SERVERAPI_URL;
+            const API_URL = import.meta.env.VITE_SERVERAPI_URL;
 
-            // console.log(API_URL)
+            console.log(API_URL)
 
-            const response = await axios.get(`http://localhost:3001/api/users/verify-email=${token.trim()}`);
+            const response = await axios.get(`${API_URL}/users/verify-email`,{
+                                params: {
+                                    token: token.trim()
+                                }
+                            });
             if (response.data.message) {
                 setSuccess(response.data.message);
                 setToken("");

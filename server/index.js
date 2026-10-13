@@ -16,8 +16,8 @@ app.use(cors())
 
 // routes
 app.use("/api", userRoutes);
-app.use("/api",cmsRouter)
-app.use("/api/admin", adminRouter)
+app.use("/api",cmsRouter);
+app.use("/api/admin", adminRouter);
 
 dontenv.config()
 const port = process.env.PORT

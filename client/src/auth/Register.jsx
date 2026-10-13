@@ -39,9 +39,9 @@ const Register = () => {
                     email: "",
                     password: ""
                 });
-                // setTimeout(() => {
-                //     navigate("/verify-email");
-                // }, 1500);
+                setTimeout(() => {
+                    navigate("/verify-email");
+                }, 1500);
             }
 
         } catch (error) {
