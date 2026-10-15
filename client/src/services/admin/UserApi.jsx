@@ -13,7 +13,7 @@ export const getUsers = async () => {
 }
 
 export const approveUser = async(userId) => {
-    const token = locatStorage.getItem("adminToken");
+    const token = localStorage.getItem("adminToken");
 
     const response = await axios.put(`${API_URL}/admin/users/${userId}/approve`, {}, {
         headers: {

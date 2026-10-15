@@ -1,6 +1,7 @@
 import User from '../models/Users.js';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken'
 
 export const registerUser = async (req, res) => {
 
@@ -70,5 +71,59 @@ export const verifyEmail = async (req, res) => {
     } catch (error) {
         console.error('Error verifying email:', error);
         res.status(500).json({ message: 'Server error' });
+    }
+}
+
+
+export const loginUser = async (req, res) => {
+    try{
+        const {email, password} = req.body;
+
+        if(!email || !password){
+            return res.status(400).json({ success: false, message: "Email and password are required"})
+        }
+
+        const user = await User.findOne({
+            email: email.toLowerCase().trim(),
+        })
+
+        if (!user) {
+            return res.status(401).json({ success: false, messafe: "user is not registered"})
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+
+        if(!isPasswordValid){
+            return res.status(401).json({ success: false, message: "Invalid password"})
+        }
+
+        if (!user.isEmailVerified){
+            return res.status(403).json({ success: false, message: "Please verify your email before logging in", code: "EMAIL_NOT_VERIFIED"})
+        }
+
+        if(user.status !== "approved"){
+            return res.status(403).json({ success: false, message: user.status === "rejected" ? "Your account has beed rejected":" your accout is waiting for admin approval", code: "ACCOUNT_NOT_APPROVED"})
+        }
+
+        const token = jwt.sign({
+            id: user._id,
+            email: user.email,
+            role: "user",
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d"})
+
+        return res.status(200).json({
+            success: true, message: "Login Successfull", token, user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                status: user.status,
+                isEmailVerified: user.isEmailVerified,
+            }
+        })
+    } catch (error){
+        console.error("Error during user login:", error);
+        return res.status(500).json({ success: false, message: "Internal server error"})
     }
 }
