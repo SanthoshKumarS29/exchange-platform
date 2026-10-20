@@ -7,6 +7,8 @@ import AdminLogin from "./admin/AdminLogin"
 import AdminProtectedRoute from "./admin/protectedRoute/AdminProtectedRoute"
 import Register from "./auth/Register"
 import VerifyEmail from "./auth/VerifyEmail"
+import Login from "./auth/login"
+import UserLogin from "./auth/UserLogin"
 
 
 function App() {
@@ -41,6 +43,7 @@ function App() {
           <Route path="*" element={<div>404 Not Found</div>} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />}/>
+          <Route path="/login" element={<UserLogin />}/>
         </Routes>
     </>
   )

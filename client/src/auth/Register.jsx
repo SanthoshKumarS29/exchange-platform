@@ -39,8 +39,13 @@ const Register = () => {
                     email: "",
                     password: ""
                 });
+
                 setTimeout(() => {
-                    navigate("/verify-email");
+                    navigate("/verify-email",{
+                        state: {
+                            token: response.user?.emailVerificationToken
+                        }
+                    });
                 }, 1500);
             }
 
@@ -72,7 +77,7 @@ const Register = () => {
                     </div> 
                     <div> 
                         <label className="block text-sm font-medium mb-1"> Password </label> 
-                        <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required minLength={8} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-black" /> 
+                        <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required minLength={8} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-black" autoComplete="on"/> 
                     </div> 
                     <button type="submit" disabled={loading} className="w-full rounded-lg bg-black py-3 text-white font-medium hover:bg-gray-800 disabled:opacity-50" > {loading ? "Creating Account..." : "Create Account"} </button> 
                 </form> 

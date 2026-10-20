@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(
+        location.state?.token || "hello"
+    );
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    
 
     const handleVerifyEmail = async (e) => {
         e.preventDefault();
@@ -26,8 +30,6 @@ const VerifyEmail = () => {
             console.log('hello wrols')
 
             const API_URL = import.meta.env.VITE_SERVERAPI_URL;
-
-            console.log(API_URL)
 
             const response = await axios.get(`${API_URL}/users/verify-email`,{
                                 params: {
