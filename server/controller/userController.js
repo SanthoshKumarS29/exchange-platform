@@ -127,3 +127,92 @@ export const loginUser = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error"})
     }
 }
+
+export const forgetPassword = async (req,res) => {
+    try{
+        const { email } = req.body;
+
+        if(!email || !email.trim()){
+            return res.status(400).json({
+                success: false,
+                message: "Please provide your email address",
+            })
+        }
+
+        const user = await User.findOne({
+            email: email.trim().toLowerCase(),
+        });
+
+        if(!user){
+            return res.status(404).json({
+                success: false,
+                message: "No account found with this email",
+            })
+        };
+
+        return res.status(200).json({
+            success: true,
+            message: "Email verified for this demo, You can reset your password",
+            email: user.email
+        })
+    }catch(error){
+        console.error("forget password error", error);
+        return res.status(500).json({
+            success: false,
+            message: "server error"
+        })
+    }
+}
+
+export const resetPassword = async (req,res) => {
+    try{
+        const { email, newPassword, confirmPassword} = req.body;
+
+        if (!email || !newPassword || !confirmPassword){
+            return res.status(400).json({
+                success: false,
+                message: "Please provide all required fields"
+            })
+        }
+
+        if(newPassword.length > 6){
+            return res.status(400).json({
+                success: false,
+                message: "password must be at least 6 character long"
+            })
+        }
+
+        if(newPassword !== confirmPassword){
+            return res.status(400).json({
+                success: false,
+                message: "passwords do not match"
+            })
+        }
+
+        const user = await User.findOne({
+            email: email.trim().toLowerCase(),
+        })
+
+        if(!use){
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            })
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Password reset successfully. please login in"
+        })
+    } catch(error){
+        console.error("Reset password error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "server error"
+        })
+    }
+}
