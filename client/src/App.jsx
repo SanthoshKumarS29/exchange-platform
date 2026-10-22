@@ -7,8 +7,9 @@ import AdminLogin from "./admin/AdminLogin"
 import AdminProtectedRoute from "./admin/protectedRoute/AdminProtectedRoute"
 import Register from "./auth/Register"
 import VerifyEmail from "./auth/VerifyEmail"
-import Login from "./auth/login"
 import UserLogin from "./auth/UserLogin"
+import ForgetPassword from "./auth/ForgetPassword"
+import ResetPassword from "./auth/ResetPassword"
 
 
 function App() {
@@ -44,6 +45,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />}/>
           <Route path="/login" element={<UserLogin />}/>
+          <Route path="/forgot-password" element={<ForgetPassword />}/>
+          <Route path="/reset-password" element={<ResetPassword />}/>
         </Routes>
     </>
   )

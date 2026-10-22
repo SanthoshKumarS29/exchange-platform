@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { loginUser } from '../services/server/user/UserApi';
+import { Link } from 'react-router-dom';
 
 const UserLogin = () => {
     const [formData, setFormData] = useState({
@@ -144,13 +145,19 @@ const UserLogin = () => {
 
                 <p className="mt-6 text-center text-sm text-slate-500">
                     Don't have an account?{" "}
-                    <a
-                        href="/register"
+                    <Link
+                        to="/register"
                         className="font-semibold text-blue-600 hover:text-blue-800"
                     >
                         Create an account
-                    </a>
+                    </Link>
                 </p>
+                <Link
+                    to="/forgot-password"
+                    className="text-center w-full inline-block text-sm font-medium mt-3 text-blue-600 hover:text-blue-800"
+                >
+                    Forgot Password?
+                </Link>
             </div>
         </div>
     )
