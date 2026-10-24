@@ -175,7 +175,7 @@ export const resetPassword = async (req,res) => {
             })
         }
 
-        if(newPassword.length > 6){
+        if(newPassword.length < 6){
             return res.status(400).json({
                 success: false,
                 message: "password must be at least 6 character long"
@@ -193,7 +193,7 @@ export const resetPassword = async (req,res) => {
             email: email.trim().toLowerCase(),
         })
 
-        if(!use){
+        if(!user){
             return res.status(404).json({
                 success: false,
                 message: "User not found",

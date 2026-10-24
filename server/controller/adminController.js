@@ -125,3 +125,44 @@ export const approvedUser = async(req, res) => {
         });
     }
 }
+
+export const rejectuser = async(req, res) => {
+    try{
+        const { id } = req.params;
+        const user = await User.findById(id);
+
+        if(!user){
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        if(user.status !== "pending"){
+            return res.status(400).json({
+                success: false,
+                message: `Cannot reject the user with "${user.status}"`
+            })
+        }
+
+        user.status = "rejected";
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "User rejected successfully",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                status: user.status,
+            }
+        })
+    } catch(error){
+        console.error("Error rejecting user:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+}
