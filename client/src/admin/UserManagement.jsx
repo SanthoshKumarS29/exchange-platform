@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { approveUser, getUsers } from '../services/admin/UserApi';
+import { approveUser, getUsers, rejectUser } from '../services/admin/UserApi';
 
 const UserManagement = () => {
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [updatingUserId, setUpdatingUserId] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -28,15 +29,48 @@ const UserManagement = () => {
     return <div className="p-6">Loading users...</div>;
   }
 
-  const handleApprove = async(userId) => {
-    try{
+  const handleApprove = async (userId) => {
+    setError('');
+    setUpdatingUserId(userId);
+
+    try {
       const response = await approveUser(userId);
-      if(response.success){
+      if (response.success) {
         setUsers(prevUsers => prevUsers.map(user => user._id === userId ? { ...user, status: 'approved' } : user));
       }
     } catch (error) {
       console.error("Error approving user:", error);
       setError("Failed to approve user.");
+    } finally {
+      setUpdatingUserId(null)
+    }
+  }
+
+  const hanleReject = async (userId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to reject this user?"
+    )
+
+    if (!confirmed) return;
+
+    setError("");
+    setUpdatingUserId(userId);
+
+    try {
+      const response = await rejectUser(userId);
+
+      if (response.success) {
+        setUsers(prevUsers => prevUsers.map((user) => user._id === userId ? { ...user, status: 'rejected' } : user));
+      } else {
+        setError(response.message || "Failed to reject user.");
+      }
+    } catch (error) {
+      console.error("Error rejecting user:", error);
+      setError(
+        error.response?.data?.message || "Failed to reject user."
+      );
+    } finally {
+      setUpdatingUserId(null)
     }
   }
 
@@ -100,9 +134,14 @@ const UserManagement = () => {
                     ) : user.status === "rejected" ? (
                       <span className="text-red-600 font-semibold">Rejected</span>
                     ) : (
-                      <button onClick={() => handleApprove(user._id)} className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600" disabled={user.status === "approved"}>
-                        Approve
-                      </button>
+                      <div className='flex flex-wrap gap-2'>
+                        <button onClick={() => handleApprove(user._id)} className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600" disabled={updatingUserId  !== null}>
+                          {updatingUserId === user._id ? "Proceessing..." : "Approve"}
+                        </button>
+                        <button onClick={() => hanleReject(user._id)} className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600" disabled={updatingUserId  !== null}>
+                          {updatingUserId === user._id ? "Proceessing..." : "Reject"}
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>

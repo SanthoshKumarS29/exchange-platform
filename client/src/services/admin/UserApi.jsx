@@ -22,3 +22,15 @@ export const approveUser = async(userId) => {
     })
     return response.data;
 }
+
+export const rejectUser = async(userId) => {
+    const token = localStorage.getItem("adminToken");
+
+    const response = await axios.put(`${API_URL}/admin/users/${userId}/reject`,{}, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+
+    return response.data;
+}
