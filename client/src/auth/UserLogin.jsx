@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { loginUser } from '../services/server/user/UserApi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const UserLogin = () => {
+
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -39,16 +41,35 @@ const UserLogin = () => {
         try{
             setLoading(true);
             const response = await loginUser(formData);
-            if(response.success){
+            if(response.success || !response?.token || !response?.user){
                 setSuccess(response.message);
                 setFormData({
                     email: '',
                     password: ''
                 })
-                alert('sucees')
+
+                localStorage.setItem('userTokenFE', response.token);
+                localStorage.setItem('userSessionExpiryFE', String(Date.now() + 24 * 60 * 60 * 1000));
+                localStorage.setItem('userData', JSON.stringify(response.user));
+
+                navigate('/dashboard', {replace:  true})
+                
             }
         } catch(error){
-            setError(error.response?.data?.message || "An error occurred");
+            const status = error.response?.status;
+            const code = error.response?.data?.code;
+            const message = error.response?.data?.message;
+
+            if(code === "EMAIL_NOT_VERIFIED"){
+                setError('Please verify your email before login in');
+            } else if(code === 'ACCOUNT_NOT_APPROVED'){
+                setError(message || 'Your account is waiting for admin approval.')
+            } else if(status === 401){
+                setError('Invalid email or password.')
+            } else {
+                setError(message || 'Unable to sign in. Please try again.');
+            }
+
         } finally {
             setLoading(false)
         }

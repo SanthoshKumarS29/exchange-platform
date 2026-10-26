@@ -88,7 +88,7 @@ export const loginUser = async (req, res) => {
         })
 
         if (!user) {
-            return res.status(401).json({ success: false, messafe: "user is not registered"})
+            return res.status(401).json({ success: false, message: "user is not registered"})
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password)

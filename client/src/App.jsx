@@ -10,6 +10,8 @@ import VerifyEmail from "./auth/VerifyEmail"
 import UserLogin from "./auth/UserLogin"
 import ForgetPassword from "./auth/ForgetPassword"
 import ResetPassword from "./auth/ResetPassword"
+import UserProtectedRoute from "./auth/UserProtectedRoute"
+import DashboardHome from "./dashboard/DashboardHome"
 
 
 function App() {
@@ -40,6 +42,12 @@ function App() {
               </AdminLayout>
             </AdminProtectedRoute>
           } />
+
+          <Route path='/dashboard' element={
+            <UserProtectedRoute>
+              <DashboardHome />
+            </UserProtectedRoute>
+          }/>
 
           <Route path="*" element={<div>404 Not Found</div>} />
           <Route path="/register" element={<Register />} />
