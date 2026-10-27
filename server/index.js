@@ -5,6 +5,7 @@ import connectDb from "./config/Db.js";
 import userRoutes from "./routes/UserReg.js";
 import cmsRouter from "./routes/cmsRouter.js";
 import adminRouter from "./routes/adminRouter.js";
+import marketRouter from "./routes/markets/marketRoutes.js"
 
 
 
@@ -18,6 +19,7 @@ app.use(cors())
 app.use("/api", userRoutes);
 app.use("/api",cmsRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api", marketRouter);
 
 dontenv.config()
 const port = process.env.PORT

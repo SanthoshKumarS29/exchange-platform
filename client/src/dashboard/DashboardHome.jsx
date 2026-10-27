@@ -13,8 +13,8 @@ const DashboardHome = () => {
     }
 
     const handleLogout = () => {
-        localStorage.removeItem('userToken');
-        localStorage.removeItem('userSessionExpiry');
+        localStorage.removeItem('userTokenFE');
+        localStorage.removeItem('userSessionExpiryFE');
         localStorage.removeItem('userData');
 
         navigate('/login', { replace: true });
