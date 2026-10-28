@@ -12,6 +12,7 @@ import ForgetPassword from "./auth/ForgetPassword"
 import ResetPassword from "./auth/ResetPassword"
 import UserProtectedRoute from "./auth/UserProtectedRoute"
 import DashboardHome from "./dashboard/DashboardHome"
+import MarketList from "./pages/markets/MarketList"
 
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
           <Route path="/login" element={<UserLogin />}/>
           <Route path="/forgot-password" element={<ForgetPassword />}/>
           <Route path="/reset-password" element={<ResetPassword />}/>
+          <Route path ="/markets" element={<MarketList />}/>
         </Routes>
     </>
   )

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { fetchMarkets } from "../../services/server/market/marketAPi"
 
-export const loadmarkets = createAsyncThunk('markets/loadMarkets', 
+export const loadMarkets = createAsyncThunk('markets/loadMarkets', 
     async(_, { rejectWithValue }) => {
         try{
             const response = await fetchMarkets();
@@ -28,15 +28,15 @@ const marketSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(loadmarkets.pending, (state) => {
+            .addCase(loadMarkets.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(loadmarkets.fulfilled, (state, action) => {
-                state.status = 'successed';
+            .addCase(loadMarkets.fulfilled, (state, action) => {
+                state.status = 'succeeded';
                 state.items = action.payload;
             })
-            .addCase(loadmarkets.rejected, (state, action) => {
+            .addCase(loadMarkets.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload || 'Something went wrong'
             })
