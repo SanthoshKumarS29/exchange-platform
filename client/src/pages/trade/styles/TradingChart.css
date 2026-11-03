@@ -1,0 +1,53 @@
+.trading-chart {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 10px;
+  padding: 16px;
+  color: #ffffff;
+  min-width: 0;
+}
+
+.chart-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.chart-toolbar h3 {
+  margin: 0;
+}
+
+.chart-intervals {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chart-intervals button {
+  background: #1f2937;
+  color: #d1d5db;
+  border: 0;
+  padding: 7px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.chart-intervals button.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.chart-container {
+  width: 100%;
+  min-width: 0;
+  height: 380px;
+}
+
+.chart-note {
+  color: #9ca3af;
+  font-size: 12px;
+  margin-bottom: 0;
+}

@@ -13,6 +13,7 @@ import ResetPassword from "./auth/ResetPassword"
 import UserProtectedRoute from "./auth/UserProtectedRoute"
 import DashboardHome from "./dashboard/DashboardHome"
 import MarketList from "./pages/markets/MarketList"
+import Trading from "./pages/trade/Trading"
 
 
 function App() {
@@ -47,6 +48,12 @@ function App() {
           <Route path='/dashboard' element={
             <UserProtectedRoute>
               <DashboardHome />
+            </UserProtectedRoute>
+          }/>
+
+          <Route path='/trade-page/:pair' element={
+            <UserProtectedRoute>
+              <Trading />
             </UserProtectedRoute>
           }/>
 
