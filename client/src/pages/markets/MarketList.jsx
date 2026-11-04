@@ -1,6 +1,7 @@
 import {useState, useEffect, useMemo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadMarkets } from '../../features/market/marketSlice';
+import { useNavigate } from 'react-router-dom';
 
 
 const formatPrice = (price) => new Intl.NumberFormat('en-us', {
@@ -15,13 +16,13 @@ const formatVolume =(volume) => new Intl.NumberFormat('en-us', {
 
 const MarketList = () => {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
+    
     const { items, status, error} = useSelector(
         (state) => state.markets
     );
 
     const [search, setSearch] = useState('')
-    const [selectedMarket, setSelectedMarket] = useState(null);
 
     useEffect(() => {
         if(status === 'idle'){
@@ -130,18 +131,11 @@ const MarketList = () => {
                             <tbody className="divide-y divide-slate-800">
                                 {filteredMarkets.map((market) => {
                                     const isPositive = market.change24h >= 0;
-                                    const isSelected =
-                                        selectedMarket?.id === market.id;
 
                                     return (
                                         <tr
                                             key={market.id}
-                                            className={
-                                                isSelected
-                                                    ? 'bg-blue-950/40'
-                                                    : 'transition hover:bg-slate-800/60'
-                                            }
-                                        >
+                                            className='transition hover:bg-slate-800/60'>
                                             <td className="px-5 py-4">
                                                 <div className="font-semibold text-white">
                                                     {market.symbol}
@@ -173,13 +167,11 @@ const MarketList = () => {
                                             <td className="px-5 py-4 text-right">
                                                 <button
                                                     onClick={() =>
-                                                        setSelectedMarket(market)
+                                                        navigate(`/trade-page/${market.id}`)
                                                     }
                                                     className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-500"
                                                 >
-                                                    {isSelected
-                                                        ? 'Selected'
-                                                        : 'Select'}
+                                                    Trade
                                                 </button>
                                             </td>
                                         </tr>
@@ -193,22 +185,6 @@ const MarketList = () => {
                                 No markets match your search.
                             </p>
                         )}
-                    </div>
-                )}
-
-                {selectedMarket && (
-                    <div className="mt-6 rounded-xl border border-blue-800 bg-blue-950/30 p-5">
-                        <p className="text-sm text-blue-300">
-                            Selected trading pair
-                        </p>
-
-                        <h3 className="mt-1 text-xl font-bold">
-                            {selectedMarket.symbol}
-                        </h3>
-
-                        <p className="mt-2 text-sm text-slate-400">
-                            The dedicated Trading page will be added next.
-                        </p>
                     </div>
                 )}
             </section>

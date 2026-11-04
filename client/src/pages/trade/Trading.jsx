@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom'
 import { loadMarkets } from '../../features/market/marketSlice';
 import TradingChart from './TradingChart';
+import OrderPanel from './OrderPanel';
 
 const Trading = () => {
 
@@ -76,6 +77,8 @@ const Trading = () => {
 
             <section className="trading-layout">
                 <TradingChart price={price} />
+
+                <OrderPanel market={market} currentPrice={price} />
             </section>
 
             <section className="trading-panel">

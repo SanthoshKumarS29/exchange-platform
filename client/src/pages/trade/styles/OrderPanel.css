@@ -1,0 +1,105 @@
+
+.order-panel {
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 10px;
+    padding: 20px;
+    color: #fff;
+    min-width: 0;
+}
+
+.order-panel h3 {
+    margin: 0 0 20px;
+}
+
+.order-side,
+.order-type {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.order-side button,
+.order-type button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #1f2937;
+    color: #d1d5db;
+    cursor: pointer;
+}
+
+.order-side .buy.active {
+    background: #15803d;
+    color: white;
+}
+
+.order-side .sell.active {
+    background: #b91c1c;
+    color: white;
+}
+
+.order-type button.active {
+    background: #374151;
+    color: white;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.form-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    color: white;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #3b82f6;
+}
+
+.market-price,
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+.market-price span,
+.order-total span {
+    color: #9ca3af;
+}
+
+.submit-order {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.submit-order.buy {
+    background: #15803d;
+}
+
+.submit-order.sell {
+    background: #b91c1c;
+}
