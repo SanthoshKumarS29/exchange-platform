@@ -1,11 +1,12 @@
 import express from "express";
-import dontenv from "dotenv";
+import dotenv from "dotenv";
 import cors from "cors";
 import connectDb from "./config/Db.js";
 import userRoutes from "./routes/UserReg.js";
 import cmsRouter from "./routes/cmsRouter.js";
 import adminRouter from "./routes/adminRouter.js";
 import marketRouter from "./routes/markets/marketRoutes.js"
+import orderRouter from "./routes/orders/orderRoutes.js"
 
 
 
@@ -20,8 +21,9 @@ app.use("/api", userRoutes);
 app.use("/api",cmsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api", marketRouter);
+app.use("/api/orders", orderRouter);
 
-dontenv.config()
+dotenv.config()
 const port = process.env.PORT
 
 app.listen(port,()=>{
