@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { loadMarkets } from '../../features/market/marketSlice';
 import TradingChart from './TradingChart';
 import OrderPanel from './OrderPanel';
+import OrderHistory from './OrderHistory';
 
 const Trading = () => {
 
@@ -80,6 +81,7 @@ const Trading = () => {
 
                 <OrderPanel market={market} currentPrice={price} />
             </section>
+            <OrderHistory />
 
             <section className="trading-panel">
                 <h3>Orders and Trade History</h3>

@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
-import './styles/OrderPanel.css'
+import { useDispatch, useSelector } from 'react-redux'
+import './styles/Order.css'
+import { clearOrderMessages, createOrder } from '../../features/order/OrderSlice';
 
 const OrderPanel = ({ market, currentPrice }) => {
+    const dispatch = useDispatch();
+    const { createStatus, error, successMessage } = useSelector(
+        (state) => state.orders
+    )
+
+
     const [side, setSide] = useState('buy');
     const [orderType, setOrderType] = useState('market');
     const [price, setPrice] = useState(currentPrice);
@@ -11,29 +19,40 @@ const OrderPanel = ({ market, currentPrice }) => {
 
     const total = orderPrice * Number(quantity || 0);
 
-    const handleSubmit = (e) => {
+    const isSubmitting = createStatus === 'loading';
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if(!quantity || Number(quantity) <= 0){
-            alert('Please enter a valid quantity');
+        dispatch(clearOrderMessages())
+
+        if (!quantity || !Number.isFinite(Number(quantity)) ||
+            Number(quantity) <= 0) {
             return;
         }
 
-        if(orderType === 'limit' && (!price || Number(price) <= 0)){
-            alert('Please enter a valid price for limit order');
+        if (!Number.isFinite(orderPrice) || orderPrice <= 0) {
             return;
         }
 
-        alert(
-            `${side.toUpperCase()} order placed successfully!\n` +
-            `Market: ${market.symbol}\n` +
-            `Order type: ${orderType}\n` +
-            `Price: ${orderPrice}\n` +
-            `Quantity: ${quantity}\n` +
-            `Total: ${total.toFixed(2)} ${market.quoteAsset}`
-        );
+        const orderData = {
+            marketId: market.id,
+            symbol: market.symbol,
+            baseAsset: market.baseAsset,
+            quoteAsset: market.quoteAsset,
+            side,
+            orderType,
+            price: orderPrice,
+            quantity: Number(quantity)
+        }
 
-        setQuantity('');
+        try{
+            await dispatch(createOrder(orderData)).unwrap();
+            setQuantity('');
+        } catch(error){
+            console.error('Order submission failed', error);
+        }
+
     }
 
   return (
@@ -142,12 +161,24 @@ const OrderPanel = ({ market, currentPrice }) => {
                     </strong>
                 </div>
 
+                {/* Error message */}
+                {error && (
+                    <p className="order-error">{error}</p>
+                )}
+
+                {/* Success message */}
+                {successMessage && (
+                    <p className="order-success">{successMessage}</p>
+                )}
+
                 {/* Submit */}
                 <button
                     type="submit"
                     className={`submit-order ${side}`}
                 >
-                    {side === 'buy' ? 'Buy' : 'Sell'} {market.baseAsset}
+                    {isSubmitting
+                        ? 'Placing Order...'
+                        : `${side === 'buy' ? 'Buy' : 'Sell'} ${market.baseAsset}`}
                 </button>
 
             </form>

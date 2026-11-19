@@ -1,0 +1,266 @@
+Think of your Exchange Platform as a simplified version of a cryptocurrency exchange.
+
+## **1. Trading Chart — What does it do?**
+
+The Trading Chart displays how the price of a trading pair changes over time.
+
+For example, `BTC-USDT` means you're viewing the price of Bitcoin in USDT.
+
+A candlestick represents price movement during a particular period.
+
+Each candle has four important values:
+
+- **Open:** Price when the period started.
+- **High:** Highest price during that period.
+- **Low:** Lowest price during that period.
+- **Close:** Price when the period ended.
+
+For example:
+
+| Value | Price  |
+| ----- | ------ |
+| Open  | 65,000 |
+| High  | 66,000 |
+| Low   | 64,500 |
+| Close | 65,800 |
+
+If the closing price is higher than the opening price, the candle is generally green. If it's lower, it's generally red.
+
+**In our current project:** Your chart uses generated demo candles. It isn't connected to actual executed trades yet.
+
+## **2. Order Placement — What happens when a user places an order?**
+
+The Order Panel is where users tell the exchange what they want to buy or sell.
+
+There are two important order types.
+
+**Market Order**
+
+Buy or sell immediately at the best available opposing price.
+
+Example: Bitcoin's displayed price is 65,000 USDT. You submit a market Buy for 0.01 BTC.
+
+The exchange attempts to find a seller willing to sell 0.01 BTC.
+
+**Limit Order**
+
+Buy or sell only at your specified price or a better price.
+
+Example: Bitcoin is currently 65,000 USDT. You submit a limit Buy at 64,000 USDT.
+
+Your order waits until a compatible seller is available at 64,000 USDT or lower.
+
+The important difference:
+
+- Market orders prioritize execution.
+- Limit orders prioritize price.
+
+A limit order might remain pending for some time.
+
+## **3. Buy and Sell — What do they actually mean?**
+
+Let's use BTC-USDT.
+
+BUY
+
+**You want Bitcoin**
+
+You spend USDT and receive BTC when your order executes.
+
+Example:
+
+Buy 0.01 BTC at 65,000 USDT.
+
+# **650 USDT**
+
+Cost before any fees
+
+SELL
+
+**You want to sell Bitcoin**
+
+You give BTC and receive USDT when your order executes.
+
+Example:
+
+Sell 0.01 BTC at 65,000 USDT.
+
+# **650 USDT**
+
+Proceeds before any fees
+
+Notice that Buy and Sell are opposite sides of the same transaction:
+
+- A buyer wants to acquire an asset.
+- A seller wants to give up that asset.
+
+For a trade to happen, compatible buyer and seller orders must meet.
+
+## **4. How everything works together**
+
+This is the most important part to understand before the Matching Engine.
+
+**1. Trading Chart**
+
+Displays market price information
+
+**2. Order Panel**
+
+User selects Buy/Sell, Market/Limit, price and quantity
+
+**3. Order Management**
+
+Stores the submitted order in MongoDB
+
+**4. Matching Engine**
+
+Finds compatible Buy and Sell orders
+
+**Buyer**
+
+Receives BTC
+
+**Seller**
+
+Receives USDT
+
+**5. Trade History and Chart**
+
+Records completed trades and updates the chart using execution prices
+
+## **5. A practical example of the Matching Engine**
+
+Imagine two users on your platform:
+
+| User A — Buyer      | User B — Seller     |
+| ------------------- | ------------------- |
+| Buy 0.01 BTC        | Sell 0.01 BTC       |
+| Limit price: 65,000 | Limit price: 64,900 |
+
+Can these orders match?
+
+**Yes.** The buyer is willing to pay up to 65,000, and the seller is willing to accept 64,900 or more.
+
+The exchange can execute the trade at 64,900 USDT, assuming that is the applicable matching price under our chosen rules.
+
+After execution:
+
+- User A receives 0.01 BTC.
+- User B receives 649 USDT.
+- Both orders become `filled`.
+- A trade record is created.
+- The execution price becomes a new market-price data point for the chart.
+
+This is what our Matching Engine will simulate.
+
+
+<!-- ----------------------------------------------------------------------------------------------------------------------------------------- -->
+
+
+
+A **Market Order** means the user wants to buy or sell an asset immediately at the best available price in the market.
+
+Unlike a Limit Order, the user doesn't specify the price they want. They specify only the quantity.
+
+Let's use your BTC-USDT market as an example.
+
+## **1. How a Market Buy works**
+
+Imagine the current Bitcoin market has these Sell orders:
+
+| Seller   | Available BTC | Asking price |
+| -------- | ------------- | ------------ |
+| Seller A | 0.005 BTC     | 65,000 USDT  |
+| Seller B | 0.010 BTC     | 65,100 USDT  |
+| Seller C | 0.020 BTC     | 65,200 USDT  |
+
+Now User A submits:
+
+MARKET BUY
+
+**Buy 0.01 BTC**
+
+# **0.01 BTC**
+
+Requested quantity
+
+The Matching Engine searches for the cheapest available Sell orders.
+
+It executes:
+
+- 0.005 BTC from Seller A at 65,000.
+- 0.005 BTC from Seller B at 65,100.
+
+The buyer receives 0.01 BTC.
+
+Total cost:
+
+\\[ (0.005 \times 65000)+(0.005 \times 65100) \\]
+
+# **650.50 USDT**
+
+Notice something important: the user didn't choose 65,000 or 65,100. The Matching Engine selected the available prices.
+
+## **2. How a Market Sell works**
+
+Now imagine User B submits:
+
+MARKET SELL
+
+**Sell 0.01 BTC**
+
+# **0.01 BTC**
+
+Requested quantity
+
+The Matching Engine searches for the highest available Buy orders.
+
+For example:
+
+| Buyer   | Available BTC | Bid price   |
+| ------- | ------------- | ----------- |
+| Buyer A | 0.004 BTC     | 65,000 USDT |
+| Buyer B | 0.006 BTC     | 64,950 USDT |
+| Buyer C | 0.010 BTC     | 64,900 USDT |
+
+The seller's 0.01 BTC is matched with Buyer A and Buyer B.
+
+The seller receives:
+
+\\[ (0.004 \times 65000)+(0.006 \times 64950) \\]
+
+# **649.70 USDT**
+
+## **3. Market Order vs Limit Order**
+
+| Feature                 | Market                            | Limit                               |
+| ----------------------- | --------------------------------- | ----------------------------------- |
+| User specifies price    | No                                | Yes                                 |
+| User specifies quantity | Yes                               | Yes                                 |
+| Execution               | At available prices               | At specified price or better        |
+| Execution priority      | Immediate execution attempt       | Waits for matching conditions       |
+| Price certainty         | No                                | Yes, maximum buy/minimum sell price |
+| May remain pending?     | Yes, if liquidity is insufficient | Yes                                 |
+
+**Important:** Market orders do not guarantee execution of the entire quantity. If there isn't enough liquidity, the order may be partially filled, with the remainder cancelled under the execution policy we'll implement.
+
+## **4. What this means for our project**
+
+Currently, your OrderPanel sends a price even for Market orders because it uses the displayed market price:
+
+```
+price: orderPrice
+```
+
+That's okay for recording the initial price snapshot, but the Matching Engine must not treat that snapshot as the guaranteed execution price.
+
+When we implement matching:
+
+- Market Buy → matches against the lowest available Sell prices.
+- Market Sell → matches against the highest available Buy prices.
+- Limit Buy → matches against Sell orders at or below its limit price.
+- Limit Sell → matches against Buy orders at or above its limit price.
+
+**The most important difference:** A Market Order says, "Execute my order at the best available price." A Limit Order says, "Execute my order only at this price or better."
+
+That's the distinction we'll use when building your Matching Engine.

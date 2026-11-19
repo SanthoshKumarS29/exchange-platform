@@ -18,6 +18,6 @@ export const createOrderApi = async(orderData) => {
 }
 
 export const getOrderApi = async() => {
-    const response = await axios.post(`${API_URL}/orders/my-orders`, getAuthConfig());
+    const response = await axios.get(`${API_URL}/orders/my-orders`, getAuthConfig());
     return response.data; 
 }

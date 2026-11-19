@@ -103,3 +103,18 @@
 .submit-order.sell {
     background: #b91c1c;
 }
+
+.order-error {
+    color: #ff5252;
+    margin-top: 10px;
+}
+
+.order-success {
+    color: #22c55e;
+    margin-top: 10px;
+}
+
+.submit-order:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
