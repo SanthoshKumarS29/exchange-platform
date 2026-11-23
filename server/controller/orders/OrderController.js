@@ -62,3 +62,56 @@ export const getOrders = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
+
+
+export const getOrderBook = async (req, res) => {
+    try {
+        const { marketId } = req.params;
+
+        if (!marketId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Market ID is required',
+            });
+        }
+
+        // Buy orders: highest price first
+        const buyOrders = await Order.find({
+            marketId,
+            side: 'buy',
+            orderType: 'limit',
+            status: { $in: ['pending', 'partially_filled'] },
+        })
+            .sort({ price: -1, createdAt: 1 })
+            .select('price quantity symbol side orderType status createdAt');
+
+        // Sell orders: lowest price first
+        const sellOrders = await Order.find({
+            marketId,
+            side: 'sell',
+            orderType: 'limit',
+            status: { $in: ['pending', 'partially_filled'] },
+        })
+            .sort({ price: 1, createdAt: 1 })
+            .select('price quantity symbol side orderType status createdAt');
+            
+        console.log({ marketId, bids: buyOrders.length, asks: sellOrders.length });
+        return res.status(200).json({
+            success: true,
+            marketId,
+            orderBook: {
+                bids: buyOrders,
+                asks: sellOrders,
+            },
+        });
+
+
+    } catch (error) {
+        console.error('Get order book error:', error);
+
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to fetch order book',
+        });
+    }
+};
